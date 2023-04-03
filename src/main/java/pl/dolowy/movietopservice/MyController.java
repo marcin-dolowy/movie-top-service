@@ -1,15 +1,18 @@
 package pl.dolowy.movietopservice;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
-@Component
+@Controller
 @FxmlView("main-stage.fxml")
 public class MyController {
 
+    @FXML
+    public CheckBox checkBox;
     @FXML
     private Label nameLabel;
 
@@ -17,4 +20,6 @@ public class MyController {
     public void showMyName() {
         nameLabel.setText("Witaj, Marcin Dołowy");
     }
+
+
 }
