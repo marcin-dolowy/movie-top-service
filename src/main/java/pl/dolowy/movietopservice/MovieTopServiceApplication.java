@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import pl.dolowy.movietopservice.service.MovieService;
 
 @SpringBootApplication
 public class MovieTopServiceApplication {
@@ -16,7 +17,8 @@ public class MovieTopServiceApplication {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-            System.out.println("HELLO WORLD");
+            MovieService movieService = new MovieService();
+            movieService.saveMovie("God Father");
 
         };
     }
