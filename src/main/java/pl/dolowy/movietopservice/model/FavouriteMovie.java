@@ -21,10 +21,10 @@ public class FavouriteMovie extends Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long movieId;
+    Long id;
 
-    public FavouriteMovie(Long movieId, String id, String title, String type, String image, LocalDate releaseDate, String plot, String directors) {
-        super(id, title, type, image, releaseDate, plot, directors);
-        this.movieId = movieId;
+    public FavouriteMovie(Long id, String imdbID, String title, String type, String poster, LocalDate releaseDate, String plot, String director) {
+        super(imdbID, title, type, poster, releaseDate, plot, director);
+        this.id = id;
     }
 }
