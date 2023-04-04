@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.dolowy.movietopservice.exception.MovieNotFoundException;
 import pl.dolowy.movietopservice.model.Movie;
 import pl.dolowy.movietopservice.repository.FavouriteMovieRepository;
 
@@ -20,37 +20,34 @@ import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MovieService {
     public static final String API_KEY = "d3d95a11";
 
     private final FavouriteMovieRepository favouriteMovieRepository;
-    private List<Movie> movies = new ArrayList<>();
     ObjectMapper objectMapper = new ObjectMapper();
 
 
     @SneakyThrows
-    public List<Movie> saveMovie(String title) {
+    public List<Movie> getMoviesFromApi(String title) {
         title = title.replaceAll(" ", "+");
 
         JsonNode jsonNode = objectMapper
                 .readTree(new URL("http://www.omdbapi.com/?s=" + title + "&apikey=d3d95a11"));
 
-        System.out.println(jsonNode.toPrettyString());
+        if (jsonNode.get("Response").textValue().equals("False")) {
+            log.info("Movies not found");
+            return Collections.emptyList();
+        }
 
-        // TODO Zrobic to lepiej
-        if(!jsonNode.get("Response").asBoolean()) {
-           return Collections.emptyList();
-       }
+        List<JsonNode> idOfMovies = getImdbIDFromMoviesList(jsonNode.get("Search"));
 
-        JsonNode listOfMovies = jsonNode.get("Search");
+        return getMovieByImdbIds(idOfMovies);
 
-        List<JsonNode> idOfMovies = StreamSupport
-                .stream(listOfMovies.spliterator(), false)
-                .filter(i -> i.has("imdbID"))
-                .map(jsonNode1 -> jsonNode1.get("imdbID"))
-                .collect(Collectors.toList());
+    }
 
-        movies = idOfMovies.stream()
+    private List<Movie> getMovieByImdbIds(List<JsonNode> idOfMovies) {
+        return idOfMovies.stream()
                 .map(JsonNode::textValue)
                 .map(idMovie -> {
                     try {
@@ -64,20 +61,35 @@ public class MovieService {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
 
-        return movies;
+    private static List<JsonNode> getImdbIDFromMoviesList(JsonNode listOfMovies) {
+        return StreamSupport
+                .stream(listOfMovies.spliterator(), false)
+                .map(jsonNode1 -> jsonNode1.get("imdbID"))
+                .collect(Collectors.toList());
     }
 
     private static Movie fromJsonToMovie(JsonNode movie) {
+
+        Optional<LocalDate> date = parseValidReleaseDate(movie);
+
         return Movie.builder()
                 .imdbID(movie.get("imdbID").textValue())
                 .title(movie.get("Title").textValue())
                 .type(movie.get("Type").textValue())
                 .poster(movie.get("Poster").textValue())
-                .released(LocalDate.parse(movie.get("Released").textValue(), getDateTimeFormatter()))
+                .released(date.orElse(null))
                 .plot(movie.get("Plot").textValue())
                 .director(movie.get("Director").textValue())
                 .build();
+    }
+
+    private static Optional<LocalDate> parseValidReleaseDate(JsonNode movie) {
+        String released = movie.get("Released").textValue();
+        return Optional.ofNullable(released)
+                .filter(s -> !s.equalsIgnoreCase("N/A"))
+                .map(s -> LocalDate.parse(s, getDateTimeFormatter()));
     }
 
     private static DateTimeFormatter getDateTimeFormatter() {

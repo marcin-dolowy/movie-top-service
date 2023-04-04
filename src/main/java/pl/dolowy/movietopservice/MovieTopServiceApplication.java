@@ -1,7 +1,6 @@
 package pl.dolowy.movietopservice;
 
 import javafx.application.Application;
-import lombok.SneakyThrows;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -20,7 +19,7 @@ public class MovieTopServiceApplication {
     public CommandLineRunner commandLineRunner(ApplicationContext ctx, FavouriteMovieRepository favouriteMovieRepository) {
         return args -> {
             MovieService movieService = new MovieService(favouriteMovieRepository);
-            movieService.saveMovie("S").forEach(System.out::println);
+            System.out.println(movieService.getMoviesFromApi("A"));
         };
     }
 }
