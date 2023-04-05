@@ -1,16 +1,18 @@
 package pl.dolowy.movietopservice.model;
 
+import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDate;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
@@ -20,8 +22,8 @@ public class Movie {
     private String imdbID;
     private String title;
     private String type;
-    private String poster;
     private LocalDate released;
-    private String plot;
     private String director;
+    private String plot;
+    private String poster;
 }

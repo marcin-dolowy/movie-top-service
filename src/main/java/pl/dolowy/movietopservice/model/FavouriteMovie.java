@@ -1,9 +1,7 @@
 package pl.dolowy.movietopservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @Data
 public class FavouriteMovie extends Movie {
 
@@ -23,8 +22,9 @@ public class FavouriteMovie extends Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    public FavouriteMovie(Long id, String imdbID, String title, String type, String poster, LocalDate releaseDate, String plot, String director) {
-        super(imdbID, title, type, poster, releaseDate, plot, director);
+
+    public FavouriteMovie(Long id, String imdbID, String title, String type, LocalDate released, String director, String plot, String poster) {
+        super(imdbID, title, type, released, director, plot, poster);
         this.id = id;
     }
 }

@@ -7,7 +7,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.dolowy.movietopservice.model.Movie;
-import pl.dolowy.movietopservice.repository.FavouriteMovieRepository;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,9 +23,8 @@ import java.util.stream.StreamSupport;
 public class MovieService {
     public static final String API_KEY = "d3d95a11";
 
-    private final FavouriteMovieRepository favouriteMovieRepository;
     ObjectMapper objectMapper = new ObjectMapper();
-
+    List<Movie> movies = new ArrayList<>();
 
     @SneakyThrows
     public List<Movie> getMoviesFromApi(String title) {
@@ -42,17 +40,18 @@ public class MovieService {
 
         List<JsonNode> idOfMovies = getImdbIDFromMoviesList(jsonNode.get("Search"));
 
-        return getMovieByImdbIds(idOfMovies);
+        movies = getMoviesByImdbIds(idOfMovies);
 
+        return movies;
     }
 
-    private List<Movie> getMovieByImdbIds(List<JsonNode> idOfMovies) {
+    private List<Movie> getMoviesByImdbIds(List<JsonNode> idOfMovies) {
         return idOfMovies.stream()
                 .map(JsonNode::textValue)
                 .map(idMovie -> {
                     try {
                         JsonNode movie = objectMapper
-                                .readTree(new URL("http://www.omdbapi.com/?i=" + idMovie + "&plot=full&apikey=" + API_KEY));
+                                .readTree(new URL("http://www.omdbapi.com/?i=" + idMovie + "&apikey=" + API_KEY));
                         return fromJsonToMovie(movie);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -78,10 +77,10 @@ public class MovieService {
                 .imdbID(movie.get("imdbID").textValue())
                 .title(movie.get("Title").textValue())
                 .type(movie.get("Type").textValue())
-                .poster(movie.get("Poster").textValue())
                 .released(date.orElse(null))
                 .plot(movie.get("Plot").textValue())
                 .director(movie.get("Director").textValue())
+                .poster(movie.get("Poster").textValue())
                 .build();
     }
 
@@ -97,6 +96,10 @@ public class MovieService {
                 .parseCaseInsensitive()
                 .appendPattern("dd MMM yyyy")
                 .toFormatter(Locale.ENGLISH);
+    }
+
+    public void clearSearchedMoviesList() {
+        movies.clear();
     }
 
 }
