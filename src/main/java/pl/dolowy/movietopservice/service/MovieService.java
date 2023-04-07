@@ -23,8 +23,8 @@ import java.util.stream.StreamSupport;
 public class MovieService {
     public static final String API_KEY = "d3d95a11";
 
-    ObjectMapper objectMapper = new ObjectMapper();
-    List<Movie> movies = new ArrayList<>();
+    private ObjectMapper objectMapper = new ObjectMapper();
+    private List<Movie> movies = new ArrayList<>();
 
     @SneakyThrows
     public List<Movie> getMoviesFromApi(String title) {
@@ -96,10 +96,6 @@ public class MovieService {
                 .parseCaseInsensitive()
                 .appendPattern("dd MMM yyyy")
                 .toFormatter(Locale.ENGLISH);
-    }
-
-    public void clearSearchedMoviesList() {
-        movies.clear();
     }
 
 }
