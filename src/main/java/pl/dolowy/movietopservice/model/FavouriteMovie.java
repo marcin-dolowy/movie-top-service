@@ -3,10 +3,7 @@ package pl.dolowy.movietopservice.model;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 
@@ -20,7 +17,10 @@ public class FavouriteMovie extends Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
+
+    @Column(columnDefinition = "integer default 0")
+    private int rating;
 
     public FavouriteMovie(Long id, String imdbID, String title, String type, LocalDate released, String director, String plot, String poster) {
         super(imdbID, title, type, released, director, plot, poster);

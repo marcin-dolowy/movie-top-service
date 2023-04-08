@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ImagePoster {
-    ImageView image;
+    private ImageView image;
 }
