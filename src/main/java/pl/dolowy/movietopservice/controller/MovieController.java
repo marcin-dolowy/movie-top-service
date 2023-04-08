@@ -117,7 +117,9 @@ public class MovieController {
             ObservableList<Movie> data = FXCollections.observableList(movies);
 
             setColumnForTableView();
-            wrapTextForPlotTableColumn();
+            wrapTextForTableColumn(plotTableColumn);
+            wrapTextForTableColumn(titleTableColumn);
+            wrapTextForTableColumn(directorTableColumn);
 
             moviesTableView.setItems(data);
 
@@ -131,13 +133,13 @@ public class MovieController {
 
     }
 
-    private void wrapTextForPlotTableColumn() {
-        plotTableColumn.setCellFactory(tc -> {
+    private void wrapTextForTableColumn(TableColumn<Movie, String> tableColumn) {
+        tableColumn.setCellFactory(tc -> {
             TableCell<Movie, String> cell = new TableCell<>();
             Text text = new Text();
             cell.setGraphic(text);
             cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
-            text.wrappingWidthProperty().bind(plotTableColumn.widthProperty());
+            text.wrappingWidthProperty().bind(tableColumn.widthProperty());
             text.textProperty().bind(cell.itemProperty());
             return cell;
         });
@@ -165,3 +167,15 @@ public class MovieController {
     }
 
 }
+
+//    private void wrapTextForPlotTableColumn() {
+//        plotTableColumn.setCellFactory(tc -> {
+//            TableCell<Movie, String> cell = new TableCell<>();
+//            Text text = new Text();
+//            cell.setGraphic(text);
+//            cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+//            text.wrappingWidthProperty().bind(plotTableColumn.widthProperty());
+//            text.textProperty().bind(cell.itemProperty());
+//            return cell;
+//        });
+//    }
