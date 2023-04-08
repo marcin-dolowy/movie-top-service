@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -15,6 +16,8 @@ public class FavouriteMovieController {
     private Stage stage;
     boolean isWindowOpen = false;
 
+    @Value("${favouriteMovieStageTitle}")
+    private String title;
 
     @FXML
     private Button closeButton;
@@ -27,7 +30,7 @@ public class FavouriteMovieController {
 
         if(!isWindowOpen) {
             this.stage = new Stage();
-            stage.setTitle("Your Favourite Movies");
+            stage.setTitle(title);
             stage.setScene(new Scene(favouriteMovieSplitPane));
             isWindowOpen = true;
         }

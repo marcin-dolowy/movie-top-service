@@ -1,5 +1,6 @@
 package pl.dolowy.movietopservice.controller;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -7,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -31,6 +33,8 @@ public class MovieController {
     private final FxControllerAndView<FavouriteMovieController, SplitPane> favouriteMovieControllerSplitPane;
     private final FxWeaver fxWeaver;
 
+    @FXML
+    private Label infoLabel;
     @FXML
     private Button addToFavouriteButton;
     @FXML
@@ -83,10 +87,23 @@ public class MovieController {
                     Movie currentMovie = moviesTableView.getSelectionModel().getSelectedItem();
                     pickedMovie.setText("Your movie: " + currentMovie.getTitle() + " from " + currentMovie.getReleased());
 
-                    addToFavouriteButton.setOnMouseClicked(mouseEvent -> favouriteMovieService.add(currentMovie));
+                    addToFavouriteButton.setOnMouseClicked(
+                            mouseEvent -> {
+                                PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
+                                if (favouriteMovieService.add(currentMovie)) {
+                                    displayInfoLabel(pauseTransition, "Successfully added");
+                                } else {
+                                    displayInfoLabel(pauseTransition, "Movie already in favorites");
+                                }
+                            });
                 });
 
+    }
 
+    private void displayInfoLabel(PauseTransition pauseTransition, String message) {
+        infoLabel.setText(message);
+        pauseTransition.setOnFinished(e -> infoLabel.setText(""));
+        pauseTransition.play();
     }
 
     @FXML

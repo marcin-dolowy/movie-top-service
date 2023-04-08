@@ -41,7 +41,7 @@ public class FavouriteMovieService {
             log.info("Movie successfully added");
             return true;
         }
-        log.info("Selected movie is already on the list");
+        log.info("Selected movie is already on the favorites list");
         return false;
     }
 

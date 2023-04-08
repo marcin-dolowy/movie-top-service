@@ -15,7 +15,7 @@
     <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="718.0" prefWidth="258.0">
             <children>
-                <Button fx:id="openFavouriteMoviesButton" layoutX="14.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="172.0" text="Favorite Movies" />
+                <Button fx:id="openFavouriteMoviesButton" layoutX="14.0" layoutY="139.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="172.0" text="Favourite Movies" />
             </children></AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
             <children>
@@ -33,7 +33,7 @@
                     </font>
                 </TextField>
                 <Button fx:id="searchButton" layoutX="106.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#findMovies" prefHeight="30.0" prefWidth="150.0" text="SEARCH" />
-                <Line endX="900.0" layoutX="141.0" layoutY="121.0" startX="-100.0" />
+                <Line endX="900.0" layoutX="178.0" layoutY="123.0" startX="-100.0" />
                 <TableView fx:id="moviesTableView" layoutX="14.0" layoutY="139.0" prefHeight="550.0" prefWidth="930.0" styleClass="mytableview">
                     <columns>
                         <TableColumn fx:id="imdbIDTableColumn" prefWidth="138.0" sortable="false" text="imdbID" />
@@ -53,6 +53,7 @@
                     </font></Label>
                 <ScrollBar fx:id="scroll" layoutX="1123.0" layoutY="139.0" orientation="VERTICAL" prefHeight="550.0" prefWidth="14.0" />
                 <Button fx:id="addToFavouriteButton" layoutX="633.0" layoutY="62.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="ADD TO FAVOURITE" />
+            <Label fx:id="infoLabel" alignment="CENTER" layoutX="533.0" layoutY="95.0" prefHeight="17.0" prefWidth="350.0" />
             </children>
         </AnchorPane>
     </items>
