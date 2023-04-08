@@ -23,7 +23,7 @@ import java.util.stream.StreamSupport;
 public class MovieService {
     public static final String API_KEY = "d3d95a11";
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private List<Movie> movies = new ArrayList<>();
 
     @SneakyThrows
@@ -73,7 +73,8 @@ public class MovieService {
 
         Optional<LocalDate> date = parseValidReleaseDate(movie);
 
-        return Movie.builder()
+        return Movie
+                .builder()
                 .imdbID(movie.get("imdbID").textValue())
                 .title(movie.get("Title").textValue())
                 .type(movie.get("Type").textValue())

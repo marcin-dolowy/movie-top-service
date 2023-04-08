@@ -22,6 +22,7 @@ public class PrimaryStageInitializer implements ApplicationListener<StageReadyEv
     public void onApplicationEvent(StageReadyEvent event) {
         Stage stage = event.stage;
         Scene scene = new Scene(fxWeaver.loadView(MovieController.class));
+        stage.setTitle("Film Box Top - Movie Finder");
         stage.setScene(scene);
         stage.show();
     }

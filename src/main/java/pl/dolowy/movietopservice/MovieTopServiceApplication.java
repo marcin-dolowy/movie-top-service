@@ -39,14 +39,13 @@ public class MovieTopServiceApplication {
         return new InjectionPointLazyFxControllerAndViewResolver(fxWeaver)
                 .resolve(injectionPoint);
     }
-
-    @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-        return args -> {
-            MovieService movieService = new MovieService();
-            List<Movie> movies = movieService.getMoviesFromApi("Harry Potter");
-            System.out.println(movies.size());
-            movies.forEach(System.out::println);
-        };
-    }
+//    @Bean
+//    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+//        return args -> {
+//            MovieService movieService = new MovieService();
+//            List<Movie> movies = movieService.getMoviesFromApi("Harry Potter");
+//            System.out.println(movies.size());
+//            movies.forEach(System.out::println);
+//        };
+//    }
 }
