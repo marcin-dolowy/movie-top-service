@@ -1,0 +1,21 @@
+@startuml
+class Movie {
+- String imdbID
+- String title
+- String type
+- LocalDate released
+- String director
+- String plot
+- String poster
+}
+class FavouriteMovie {
+- Long id
+- int rating
+}
+class ImagePoster {
+- ImageView image
+}
+
+
+Movie <|-- FavouriteMovie
+@enduml

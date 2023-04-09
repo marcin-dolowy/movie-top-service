@@ -1,0 +1,61 @@
+@startuml
+class MovieController {
+- MovieService movieService
+- FavouriteMovieService favouriteMovieService
+- FxControllerAndView<FavouriteMovieController,SplitPane> favouriteMovieControllerSplitPane
+- Label pickedMovie
+- TextField movieSearchTextField
+- Button openFavouriteMoviesButton
++ void initialize()
++ void findMovies()
+}
+class FavouriteMovieController {
+- Stage stage
+- boolean isWindowOpen
+- FavouriteMovieService favouriteMovieService
+- String title
+- Button closeButton
+- SplitPane favouriteMovieSplitPane
+- TableColumn<FavouriteMovie,Integer> ratingTableColumn
++ void initialize()
++ void show()
++ void displayFavouriteMovies()
+}
+abstract class AbstractImageControllerTemplate {
++ {static} List<ImagePoster> getImagePosters(List<? extends Movie>)
++ void setTableViewForImagePoster(List<? extends Movie>)
+}
+abstract class AbstractControllerTemplate {
+# TableView<Movie> moviesTableView
+# TableView<FavouriteMovie> favouriteMoviesTableView
+# TableView<ImagePoster> posterTableView
+# TableColumn<ImagePoster,ImageView> posterTableColumn
+# TableColumn<?,String> imdbIDTableColumn
+# TableColumn<?,String> titleTableColumn
+# TableColumn<?,String> typeTableColumn
+# TableColumn<?,LocalDate> releasedTableColumn
+# TableColumn<?,String> directorTableColumn
+# TableColumn<?,String> plotTableColumn
+# ScrollBar scroll
+# Label infoLabel
+# Rating rating
+# Button rateButton
+# Button deleteMovieButton
+# Button addToFavouriteButton
++ {abstract}void initialize()
++ void setScrollBar(TableView<?>)
++ void setColumnForTableView(TableView<?>)
++ {static} void wrapTextForTableColumn(TableColumn<T,String>)
++ void wrapEachColumnsFromTableView()
++ void displayInfoLabel(PauseTransition,String)
++ void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie>)
++ void rateButtonClickAction(FavouriteMovie,FavouriteMovieService)
++ void deleteMovieButtonAction(FavouriteMovie,FavouriteMovieService)
++ void addToFavouriteButtonAction(Movie,FavouriteMovieService)
+}
+
+
+AbstractImageControllerTemplate <|-- MovieController
+AbstractImageControllerTemplate <|-- FavouriteMovieController
+AbstractControllerTemplate <|-- AbstractImageControllerTemplate
+@enduml
