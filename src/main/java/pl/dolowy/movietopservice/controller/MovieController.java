@@ -4,7 +4,10 @@ import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -25,8 +28,7 @@ public class MovieController extends AbstractImageController {
     private final FavouriteMovieService favouriteMovieService;
     private final FxControllerAndView<FavouriteMovieController, SplitPane> favouriteMovieControllerSplitPane;
 
-    @FXML
-    private TableView<Movie> moviesTableView = new TableView<>();
+
     @FXML
     private Label pickedMovie;
     @FXML
@@ -36,12 +38,12 @@ public class MovieController extends AbstractImageController {
     @FXML
     private Button addToFavouriteButton;
 
-    @FXML
+    @Override
     public void initialize() {
         openFavouriteMoviesButton.setOnAction(
                 actionEvent -> favouriteMovieControllerSplitPane.getController().show());
 
-        setScrollBar();
+        setScrollBar(moviesTableView);
 
         moviesTableView.getSelectionModel()
                 .selectedItemProperty()
@@ -71,7 +73,6 @@ public class MovieController extends AbstractImageController {
             pickedMovie.setText("");
 
             ObservableList<Movie> data = FXCollections.observableList(movies);
-            scroll.setMax(data.size());
 
             setColumnForTableView(moviesTableView);
             wrapEachColumnsFromTableView();
@@ -79,6 +80,7 @@ public class MovieController extends AbstractImageController {
             moviesTableView.setItems(data);
 
             setTableViewForImagePoster(movies);
+            scroll.setMax(data.size());
         }
     }
 

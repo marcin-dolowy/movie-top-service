@@ -32,5 +32,21 @@
     -fx-background-insets: 0, 0, 0;
     -fx-background-radius: 2em;
     -fx-padding:0px;
+}
 
+.mytableview *.scroll-bar:horizontal *.increment-button,
+.mytableview *.scroll-bar:horizontal *.decrement-button {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.mytableview *.scroll-bar:horizontal *.increment-arrow,
+.mytableview *.scroll-bar:horizontal *.decrement-arrow {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-shape: null;
 }

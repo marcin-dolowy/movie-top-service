@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -18,7 +17,6 @@ import org.controlsfx.control.Rating;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
-import pl.dolowy.movietopservice.model.ImagePoster;
 import pl.dolowy.movietopservice.service.FavouriteMovieService;
 
 import java.util.List;
@@ -39,25 +37,18 @@ public class FavouriteMovieController extends AbstractImageController {
     private Button closeButton;
     @FXML
     private SplitPane favouriteMovieSplitPane;
-
     @FXML
-    private TableView<ImagePoster> posterTableView;
-
-    @FXML
-    private TableView<FavouriteMovie> favouriteMoviesTableView;
-
-    @FXML
-    private TableColumn<?, Integer> ratingTableColumn;
-
+    private TableColumn<FavouriteMovie, Integer> ratingTableColumn;
     @FXML
     private Rating rating;
     @FXML
     private Button rateButton;
-
     @FXML
     private Button deleteMovieButton;
 
+
     @FXML
+    @Override
     public void initialize() {
 
         if (!isWindowOpen) {
@@ -69,7 +60,13 @@ public class FavouriteMovieController extends AbstractImageController {
 
         displayFavouriteMovies();
 
-        setScrollBar();
+//        setScrollBar(favouriteMoviesTableView);
+        scroll.setMax(favouriteMovieService.findAll().size());
+        scroll.setMin(0);
+        scroll.valueProperty().addListener((observableValue, number, t1) -> {
+            favouriteMoviesTableView.scrollTo(t1.intValue());
+            posterTableView.scrollTo(t1.intValue());
+        });
 
         favouriteMoviesTableView.getSelectionModel()
                 .selectedItemProperty()
@@ -91,12 +88,7 @@ public class FavouriteMovieController extends AbstractImageController {
                                 PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
                                 if (favouriteMovieService.delete(currentMovie.getId())) {
                                     displayInfoLabel(pauseTransition, "Successfully deleted");
-                                    List<FavouriteMovie> favouriteMovies = favouriteMovieService.findAll();
-                                    ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
-                                    favouriteMoviesTableView.setItems(data);
-                                    List<ImagePoster> imagesFromMovies = getImagePosters(favouriteMovies);
-                                    ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
-                                    posterTableView.setItems(imagePosters);
+                                    setUpdatedTableViewAfterDeleteMovie(favouriteMovieService.findAll());
                                 }
                             });
                 });
@@ -106,7 +98,6 @@ public class FavouriteMovieController extends AbstractImageController {
         );
     }
 
-
     public void show() {
         stage.show();
     }
@@ -114,7 +105,6 @@ public class FavouriteMovieController extends AbstractImageController {
     public void displayFavouriteMovies() {
         List<FavouriteMovie> favouriteMovies = favouriteMovieService.findAll();
         ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
-        scroll.setMax(data.size());
 
         setColumnForTableView(favouriteMoviesTableView);
         ratingTableColumn.setCellValueFactory((new PropertyValueFactory<>("rating")));
@@ -125,6 +115,7 @@ public class FavouriteMovieController extends AbstractImageController {
         ratingTableColumn.setCellValueFactory((new PropertyValueFactory<>("rating")));
 
         setTableViewForImagePoster(favouriteMovies);
+        scroll.setMax(data.size());
 
     }
 

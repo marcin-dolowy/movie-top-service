@@ -1,21 +1,28 @@
 package pl.dolowy.movietopservice.controller;
 
 import javafx.animation.PauseTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import org.springframework.stereotype.Component;
+import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.model.ImagePoster;
+import pl.dolowy.movietopservice.model.Movie;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public abstract class AbstractMainController {
 
     @FXML
-    protected TableView<?> tableView = new TableView<>();
+    protected TableView<Movie> moviesTableView = new TableView<>();
+    @FXML
+    protected TableView<FavouriteMovie> favouriteMoviesTableView = new TableView<>();
     @FXML
     protected TableView<ImagePoster> posterTableView = new TableView<>();
     @FXML
@@ -37,7 +44,10 @@ public abstract class AbstractMainController {
     @FXML
     protected Label infoLabel;
 
-    protected void setScrollBar() {
+    @FXML
+    public abstract void initialize();
+
+    protected void setScrollBar(TableView<?> tableView) {
         scroll.setMax(tableView.getFixedCellSize());
         scroll.setMin(0);
         scroll.valueProperty().addListener((observableValue, number, t1) -> {
@@ -78,6 +88,14 @@ public abstract class AbstractMainController {
         infoLabel.setText(message);
         pauseTransition.setOnFinished(e -> infoLabel.setText(""));
         pauseTransition.play();
+    }
+
+    protected void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
+        ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
+        favouriteMoviesTableView.setItems(data);
+        List<ImagePoster> imagesFromMovies = AbstractImageController.getImagePosters(favouriteMovies);
+        ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
+        posterTableView.setItems(imagePosters);
     }
 
 }
