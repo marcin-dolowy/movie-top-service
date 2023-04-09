@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.controlsfx.control.Rating;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.model.ImagePoster;
@@ -102,9 +101,11 @@ public class FavouriteMovieController {
 
                     rateButton.setOnMouseClicked(
                             mouseEvent -> {
-                                currentMovie.setRating((int) rating.getRating());
-                                favouriteMovieService.updateFavouriteMovie(currentMovie.getId(), currentMovie);
-                                favouriteMoviesTableView.refresh();
+                                if (currentMovie != null) {
+                                    currentMovie.setRating((int) rating.getRating());
+                                    favouriteMovieService.updateFavouriteMovie(currentMovie.getId(), currentMovie);
+                                    favouriteMoviesTableView.refresh();
+                                }
                             }
                     );
 
@@ -124,7 +125,7 @@ public class FavouriteMovieController {
                 });
 
         closeButton.setOnAction(
-                actionEvent -> stage.close()
+                actionEvent -> stage.hide()
         );
     }
 

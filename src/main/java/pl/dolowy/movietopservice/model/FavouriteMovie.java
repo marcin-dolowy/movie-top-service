@@ -1,13 +1,14 @@
 package pl.dolowy.movietopservice.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode(callSuper = true)
@@ -23,8 +24,9 @@ public class FavouriteMovie extends Movie {
     @Column(columnDefinition = "integer default 0")
     private int rating;
 
-    public FavouriteMovie(Long id, String imdbID, String title, String type, LocalDate released, String director, String plot, String poster) {
+    public FavouriteMovie(Long id, String imdbID, String title, String type, LocalDate released, String director, String plot, String poster, int rating) {
         super(imdbID, title, type, released, director, plot, poster);
         this.id = id;
+        this.rating = rating;
     }
 }

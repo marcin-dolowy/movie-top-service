@@ -1,6 +1,5 @@
 package pl.dolowy.movietopservice.service;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -9,8 +8,9 @@ import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.model.Movie;
 import pl.dolowy.movietopservice.repository.FavouriteMovieRepository;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,18 +22,6 @@ public class FavouriteMovieService {
     public Optional<FavouriteMovie> findFavouriteMovieById(Long id) {
         return favouriteMovieRepository.findById(id);
     }
-
-//    public void updateFavouriteMovie(Long id, Map<Object, Object> objectMap) {
-//        FavouriteMovie favouriteMovie = favouriteMovieRepository.findById(id)
-//                .orElseThrow(NoSuchElementException::new);
-//
-//        objectMap.forEach((key, value) -> {
-//            Field field = ReflectionUtils.findField(FavouriteMovie.class, (String) key);
-//            Objects.requireNonNull(field).setAccessible(true);
-//            ReflectionUtils.setField(field, favouriteMovie, value);
-//        });
-//        favouriteMovieRepository.save(favouriteMovie);
-//    }
 
     public void updateFavouriteMovie(Long id, FavouriteMovie favouriteMovie) {
         FavouriteMovie movie = favouriteMovieRepository.findById(id)
@@ -56,6 +44,7 @@ public class FavouriteMovieService {
     public boolean delete(Long id) {
         if (findFavouriteMovieById(id).isPresent()) {
             favouriteMovieRepository.deleteById(id);
+            log.info("{} successfully deleted", findFavouriteMovieById(id));
             return true;
         }
         return false;
@@ -69,10 +58,10 @@ public class FavouriteMovieService {
                 .map(FavouriteMovie::getImdbID)
                 .noneMatch(e -> e.equals(favouriteMovie.getImdbID()))) {
             favouriteMovieRepository.save(favouriteMovie);
-            log.info("Movie successfully added");
+            log.info("{} successfully added", movie);
             return true;
         }
-        log.info("Selected movie is already on the favorites list");
+        log.info("{} already on the favorites list", movie);
         return false;
     }
 

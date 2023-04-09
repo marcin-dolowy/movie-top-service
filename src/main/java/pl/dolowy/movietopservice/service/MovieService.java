@@ -24,7 +24,6 @@ public class MovieService {
     public static final String API_KEY = "d3d95a11";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private List<Movie> movies = new ArrayList<>();
 
     @SneakyThrows
     public List<Movie> getMoviesFromApi(String title) {
@@ -40,9 +39,7 @@ public class MovieService {
 
         List<JsonNode> idOfMovies = getImdbIDFromMoviesList(jsonNode.get("Search"));
 
-        movies = getMoviesByImdbIds(idOfMovies);
-
-        return movies;
+        return getMoviesByImdbIds(idOfMovies);
     }
 
     private List<Movie> getMoviesByImdbIds(List<JsonNode> idOfMovies) {
