@@ -127,15 +127,16 @@ public class MovieController {
             ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
 
             posterTableColumn.setCellValueFactory((new PropertyValueFactory<>("image")));
+            posterTableView.setFixedCellSize(155);
             posterTableView.setItems(imagePosters);
             scroll.setMax(data.size());
         }
 
     }
 
-    private void wrapTextForTableColumn(TableColumn<Movie, String> tableColumn) {
+    private <T> void wrapTextForTableColumn(TableColumn<T, String> tableColumn) {
         tableColumn.setCellFactory(tc -> {
-            TableCell<Movie, String> cell = new TableCell<>();
+            TableCell<T, String> cell = new TableCell<>();
             Text text = new Text();
             cell.setGraphic(text);
             cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
@@ -151,6 +152,7 @@ public class MovieController {
                 .map(s -> {
                     ImageView imageView = new ImageView(s);
                     imageView.setFitHeight(150);
+                    imageView.maxHeight(150);
                     imageView.setFitWidth(180);
                     return new ImagePoster(imageView);
                 })
@@ -164,6 +166,7 @@ public class MovieController {
         releasedTableColumn.setCellValueFactory((new PropertyValueFactory<>("released")));
         directorTableColumn.setCellValueFactory((new PropertyValueFactory<>("director")));
         plotTableColumn.setCellValueFactory((new PropertyValueFactory<>("plot")));
+        moviesTableView.setFixedCellSize(155);
     }
 
 }

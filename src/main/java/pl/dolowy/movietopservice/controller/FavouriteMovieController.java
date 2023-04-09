@@ -1,5 +1,6 @@
 package pl.dolowy.movietopservice.controller;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,9 +10,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.controlsfx.control.Rating;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.model.ImagePoster;
@@ -62,6 +66,15 @@ public class FavouriteMovieController {
     private TableColumn<FavouriteMovie, Integer> ratingTableColumn;
     @FXML
     private ScrollBar scroll;
+    @FXML
+    private Rating rating;
+    @FXML
+    private Button rateButton;
+
+    @FXML
+    private Label infoLabel;
+    @FXML
+    private Button deleteMovieButton;
 
     @FXML
     public void initialize() {
@@ -82,9 +95,43 @@ public class FavouriteMovieController {
             posterTableView.scrollTo(t1.intValue());
         });
 
+        favouriteMoviesTableView.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observableValue, oldValue, newValue) -> {
+                    FavouriteMovie currentMovie = favouriteMoviesTableView.getSelectionModel().getSelectedItem();
+
+                    rateButton.setOnMouseClicked(
+                            mouseEvent -> {
+                                currentMovie.setRating((int) rating.getRating());
+                                favouriteMovieService.updateFavouriteMovie(currentMovie.getId(), currentMovie);
+                                favouriteMoviesTableView.refresh();
+                            }
+                    );
+
+                    deleteMovieButton.setOnMouseClicked(
+                            mouseEvent -> {
+                                PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
+                                if (favouriteMovieService.delete(currentMovie.getId())) {
+                                    displayInfoLabel(pauseTransition, "Successfully deleted");
+                                    List<FavouriteMovie> favouriteMovies = favouriteMovieService.findAll();
+                                    ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
+                                    favouriteMoviesTableView.setItems(data);
+                                    List<ImagePoster> imagesFromMovies = getImagePosters(favouriteMovies);
+                                    ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
+                                    posterTableView.setItems(imagePosters);
+                                }
+                            });
+                });
+
         closeButton.setOnAction(
                 actionEvent -> stage.close()
         );
+    }
+
+    private void displayInfoLabel(PauseTransition pauseTransition, String message) {
+        infoLabel.setText(message);
+        pauseTransition.setOnFinished(e -> infoLabel.setText(""));
+        pauseTransition.play();
     }
 
     public void show() {
@@ -102,6 +149,7 @@ public class FavouriteMovieController {
         directorTableColumn.setCellValueFactory((new PropertyValueFactory<>("director")));
         plotTableColumn.setCellValueFactory((new PropertyValueFactory<>("plot")));
         ratingTableColumn.setCellValueFactory((new PropertyValueFactory<>("rating")));
+        favouriteMoviesTableView.setFixedCellSize(155);
 
 
         plotTableColumn.setCellFactory(tc -> {
@@ -116,22 +164,28 @@ public class FavouriteMovieController {
 
         favouriteMoviesTableView.setItems(data);
 
-        List<ImagePoster> imagesFromMovies = favouriteMovies.stream()
-                .map(Movie::getPoster)
-                .map(s -> {
-                    ImageView imageView = new ImageView(s);
-                    imageView.setFitHeight(150);
-                    imageView.setFitWidth(180);
-                    return new ImagePoster(imageView);
-                })
-                .collect(Collectors.toList());
+        List<ImagePoster> imagesFromMovies = getImagePosters(favouriteMovies);
 
         ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
 
         posterTableColumn.setCellValueFactory((new PropertyValueFactory<>("image")));
+        posterTableView.setFixedCellSize(155);
         posterTableView.setItems(imagePosters);
         scroll.setMax(data.size());
 
+    }
+
+    private static List<ImagePoster> getImagePosters(List<FavouriteMovie> favouriteMovies) {
+        return favouriteMovies.stream()
+                .map(Movie::getPoster)
+                .map(s -> {
+                    ImageView imageView = new ImageView(s);
+                    imageView.setFitHeight(150);
+                    imageView.maxHeight(150);
+                    imageView.setFitWidth(180);
+                    return new ImagePoster(imageView);
+                })
+                .collect(Collectors.toList());
     }
 
 }

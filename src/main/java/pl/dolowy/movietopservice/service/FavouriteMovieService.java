@@ -1,5 +1,6 @@
 package pl.dolowy.movietopservice.service;
 
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,26 +23,42 @@ public class FavouriteMovieService {
         return favouriteMovieRepository.findById(id);
     }
 
-    public FavouriteMovie updateFavouriteMovie(Long id, Map<Object, Object> objectMap) {
-        FavouriteMovie favouriteMovie = favouriteMovieRepository.findById(id)
+//    public void updateFavouriteMovie(Long id, Map<Object, Object> objectMap) {
+//        FavouriteMovie favouriteMovie = favouriteMovieRepository.findById(id)
+//                .orElseThrow(NoSuchElementException::new);
+//
+//        objectMap.forEach((key, value) -> {
+//            Field field = ReflectionUtils.findField(FavouriteMovie.class, (String) key);
+//            Objects.requireNonNull(field).setAccessible(true);
+//            ReflectionUtils.setField(field, favouriteMovie, value);
+//        });
+//        favouriteMovieRepository.save(favouriteMovie);
+//    }
+
+    public void updateFavouriteMovie(Long id, FavouriteMovie favouriteMovie) {
+        FavouriteMovie movie = favouriteMovieRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
 
-        objectMap.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(FavouriteMovie.class, (String) key);
-            Objects.requireNonNull(field).setAccessible(true);
-            ReflectionUtils.setField(field, favouriteMovie, value);
+        ReflectionUtils.doWithFields(FavouriteMovie.class, field -> {
+            field.setAccessible(true);
+            Object newValue = field.get(favouriteMovie);
+            if (newValue != null) {
+                field.set(movie, newValue);
+            }
         });
-
-        return favouriteMovieRepository.save(favouriteMovie);
-
+        favouriteMovieRepository.save(movie);
     }
 
     public List<FavouriteMovie> findAll() {
         return favouriteMovieRepository.findAll();
     }
 
-    public void delete(Long id) {
-        favouriteMovieRepository.deleteById(id);
+    public boolean delete(Long id) {
+        if (findFavouriteMovieById(id).isPresent()) {
+            favouriteMovieRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public boolean add(Movie movie) {

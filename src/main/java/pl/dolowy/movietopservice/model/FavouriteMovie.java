@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Data
+@ToString(callSuper = true)
 public class FavouriteMovie extends Movie {
 
     @Id
