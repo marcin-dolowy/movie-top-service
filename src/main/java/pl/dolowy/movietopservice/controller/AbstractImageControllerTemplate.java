@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 
 @Component
-public abstract class AbstractImageController extends AbstractMainController {
+public abstract class AbstractImageControllerTemplate extends AbstractControllerTemplate {
 
     protected static List<ImagePoster> getImagePosters(List<? extends Movie> favouriteMovies) {
         return favouriteMovies.stream()

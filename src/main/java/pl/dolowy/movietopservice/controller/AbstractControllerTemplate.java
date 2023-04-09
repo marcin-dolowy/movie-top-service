@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Component
-public abstract class AbstractMainController {
+public abstract class AbstractControllerTemplate {
 
     @FXML
     protected TableView<Movie> moviesTableView = new TableView<>();
@@ -102,7 +102,7 @@ public abstract class AbstractMainController {
     protected void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
         ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
         favouriteMoviesTableView.setItems(data);
-        List<ImagePoster> imagesFromMovies = AbstractImageController.getImagePosters(favouriteMovies);
+        List<ImagePoster> imagesFromMovies = AbstractImageControllerTemplate.getImagePosters(favouriteMovies);
         ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
         posterTableView.setItems(imagePosters);
     }

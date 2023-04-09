@@ -21,7 +21,7 @@ import java.util.List;
 @Controller
 @FxmlView("FavouriteMovieStage.fxml")
 @RequiredArgsConstructor
-public class FavouriteMovieController extends AbstractImageController {
+public class FavouriteMovieController extends AbstractImageControllerTemplate {
 
     private Stage stage;
     boolean isWindowOpen = false;
@@ -71,7 +71,7 @@ public class FavouriteMovieController extends AbstractImageController {
                 actionEvent -> stage.hide()
         );
     }
-    
+
     public void show() {
         stage.show();
     }

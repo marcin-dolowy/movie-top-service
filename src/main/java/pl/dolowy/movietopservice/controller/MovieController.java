@@ -22,12 +22,11 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @FxmlView("MovieStage.fxml")
-public class MovieController extends AbstractImageController {
+public class MovieController extends AbstractImageControllerTemplate {
 
     private final MovieService movieService;
     private final FavouriteMovieService favouriteMovieService;
     private final FxControllerAndView<FavouriteMovieController, SplitPane> favouriteMovieControllerSplitPane;
-
 
     @FXML
     private Label pickedMovie;
