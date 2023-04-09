@@ -8,10 +8,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+import org.controlsfx.control.Rating;
 import org.springframework.stereotype.Component;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.model.ImagePoster;
 import pl.dolowy.movietopservice.model.Movie;
+import pl.dolowy.movietopservice.service.FavouriteMovieService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -43,6 +46,12 @@ public abstract class AbstractMainController {
     protected ScrollBar scroll;
     @FXML
     protected Label infoLabel;
+    @FXML
+    private Rating rating;
+    @FXML
+    private Button rateButton;
+    @FXML
+    private Button deleteMovieButton;
 
     @FXML
     public abstract void initialize();
@@ -96,6 +105,29 @@ public abstract class AbstractMainController {
         List<ImagePoster> imagesFromMovies = AbstractImageController.getImagePosters(favouriteMovies);
         ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
         posterTableView.setItems(imagePosters);
+    }
+
+    protected void rateButtonClickAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
+        rateButton.setOnMouseClicked(
+                mouseEvent -> {
+                    if (currentMovie != null) {
+                        currentMovie.setRating((int) rating.getRating());
+                        favouriteMovieService.updateFavouriteMovie(currentMovie.getId(), currentMovie);
+                        favouriteMoviesTableView.refresh();
+                    }
+                }
+        );
+    }
+
+    protected void deleteMovieButtonAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
+        deleteMovieButton.setOnMouseClicked(
+                mouseEvent -> {
+                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
+                    if (favouriteMovieService.delete(currentMovie.getId())) {
+                        displayInfoLabel(pauseTransition, "Successfully deleted");
+                        setUpdatedTableViewAfterDeleteMovie(favouriteMovieService.findAll());
+                    }
+                });
     }
 
 }
