@@ -24,7 +24,7 @@ import java.util.List;
 public class FavouriteMovieController extends AbstractImageControllerTemplate {
 
     private Stage stage;
-    boolean isWindowOpen = false;
+    private boolean isWindowOpen = false;
     private final FavouriteMovieService favouriteMovieService;
 
     @Value("${favouriteMovieStageTitle}")
@@ -80,7 +80,6 @@ public class FavouriteMovieController extends AbstractImageControllerTemplate {
         wrapEachColumnsFromTableView();
 
         favouriteMoviesTableView.setItems(data);
-        ratingTableColumn.setCellValueFactory((new PropertyValueFactory<>("rating")));
 
         setTableViewForImagePoster(favouriteMovies);
         scroll.setMax(data.size());

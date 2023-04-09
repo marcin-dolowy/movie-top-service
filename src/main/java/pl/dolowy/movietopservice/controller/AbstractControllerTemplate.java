@@ -47,11 +47,13 @@ public abstract class AbstractControllerTemplate {
     @FXML
     protected Label infoLabel;
     @FXML
-    private Rating rating;
+    protected Rating rating;
     @FXML
-    private Button rateButton;
+    protected Button rateButton;
     @FXML
-    private Button deleteMovieButton;
+    protected Button deleteMovieButton;
+    @FXML
+    protected Button addToFavouriteButton;
 
     @FXML
     public abstract void initialize();
@@ -126,6 +128,18 @@ public abstract class AbstractControllerTemplate {
                     if (favouriteMovieService.delete(currentMovie.getId())) {
                         displayInfoLabel(pauseTransition, "Successfully deleted");
                         setUpdatedTableViewAfterDeleteMovie(favouriteMovieService.findAll());
+                    }
+                });
+    }
+
+    protected void addToFavouriteButtonAction(Movie currentMovie, FavouriteMovieService favouriteMovieService) {
+        addToFavouriteButton.setOnMouseClicked(
+                mouseEvent -> {
+                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
+                    if (favouriteMovieService.add(currentMovie)) {
+                        displayInfoLabel(pauseTransition, "Successfully added");
+                    } else {
+                        displayInfoLabel(pauseTransition, "Movie already in favorites");
                     }
                 });
     }
