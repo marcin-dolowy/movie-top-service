@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Component
 public abstract class AbstractImageControllerTemplate extends AbstractControllerTemplate {
 
-    protected static List<ImagePoster> getImagePosters(List<? extends Movie> favouriteMovies) {
+    public static List<ImagePoster> getImagePosters(List<? extends Movie> favouriteMovies) {
         return favouriteMovies.stream()
                 .map(Movie::getPoster)
                 .map(s -> {
@@ -28,7 +28,7 @@ public abstract class AbstractImageControllerTemplate extends AbstractController
                 .collect(Collectors.toList());
     }
 
-    protected void setTableViewForImagePoster(List<? extends Movie> movies) {
+    public void setTableViewForImagePoster(List<? extends Movie> movies) {
         List<ImagePoster> imagesFromMovies = getImagePosters(movies);
         ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
 

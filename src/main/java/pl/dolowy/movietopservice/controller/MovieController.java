@@ -53,7 +53,7 @@ public class MovieController extends AbstractImageControllerTemplate {
     }
 
     @FXML
-    void findMovies() {
+    public void findMovies() {
         List<Movie> movies = movieService.getMoviesFromApi(movieSearchTextField.getText());
         if (movies.isEmpty()) {
             pickedMovie.setText("MOVIE NOT FOUND");

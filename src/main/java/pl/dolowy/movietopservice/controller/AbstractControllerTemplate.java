@@ -58,7 +58,7 @@ public abstract class AbstractControllerTemplate {
     @FXML
     public abstract void initialize();
 
-    protected void setScrollBar(TableView<?> tableView) {
+    public void setScrollBar(TableView<?> tableView) {
         scroll.setMax(tableView.getItems().size());
         scroll.setMin(0);
         scroll.valueProperty().addListener((observableValue, number, t1) -> {
@@ -67,7 +67,7 @@ public abstract class AbstractControllerTemplate {
         });
     }
 
-    protected void setColumnForTableView(TableView<?> tableView) {
+    public void setColumnForTableView(TableView<?> tableView) {
         imdbIDTableColumn.setCellValueFactory((new PropertyValueFactory<>("imdbID")));
         titleTableColumn.setCellValueFactory((new PropertyValueFactory<>("title")));
         typeTableColumn.setCellValueFactory((new PropertyValueFactory<>("type")));
@@ -77,7 +77,7 @@ public abstract class AbstractControllerTemplate {
         tableView.setFixedCellSize(155);
     }
 
-    protected static <T> void wrapTextForTableColumn(TableColumn<T, String> tableColumn) {
+    public static <T> void wrapTextForTableColumn(TableColumn<T, String> tableColumn) {
         tableColumn.setCellFactory(tc -> {
             TableCell<T, String> cell = new TableCell<>();
             Text text = new Text();
@@ -89,19 +89,19 @@ public abstract class AbstractControllerTemplate {
         });
     }
 
-    protected void wrapEachColumnsFromTableView() {
+    public void wrapEachColumnsFromTableView() {
         wrapTextForTableColumn(titleTableColumn);
         wrapTextForTableColumn(directorTableColumn);
         wrapTextForTableColumn(plotTableColumn);
     }
 
-    protected void displayInfoLabel(PauseTransition pauseTransition, String message) {
+    public void displayInfoLabel(PauseTransition pauseTransition, String message) {
         infoLabel.setText(message);
         pauseTransition.setOnFinished(e -> infoLabel.setText(""));
         pauseTransition.play();
     }
 
-    protected void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
+    public void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
         ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
         favouriteMoviesTableView.setItems(data);
         List<ImagePoster> imagesFromMovies = AbstractImageControllerTemplate.getImagePosters(favouriteMovies);
@@ -109,7 +109,7 @@ public abstract class AbstractControllerTemplate {
         posterTableView.setItems(imagePosters);
     }
 
-    protected void rateButtonClickAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
+    public void rateButtonClickAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
         rateButton.setOnMouseClicked(
                 mouseEvent -> {
                     if (currentMovie != null) {
@@ -121,7 +121,7 @@ public abstract class AbstractControllerTemplate {
         );
     }
 
-    protected void deleteMovieButtonAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
+    public void deleteMovieButtonAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
         deleteMovieButton.setOnMouseClicked(
                 mouseEvent -> {
                     PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
@@ -132,7 +132,7 @@ public abstract class AbstractControllerTemplate {
                 });
     }
 
-    protected void addToFavouriteButtonAction(Movie currentMovie, FavouriteMovieService favouriteMovieService) {
+    public void addToFavouriteButtonAction(Movie currentMovie, FavouriteMovieService favouriteMovieService) {
         addToFavouriteButton.setOnMouseClicked(
                 mouseEvent -> {
                     PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
