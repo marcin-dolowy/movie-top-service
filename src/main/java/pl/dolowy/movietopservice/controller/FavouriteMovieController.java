@@ -49,13 +49,7 @@ public class FavouriteMovieController extends AbstractImageControllerTemplate {
 
         displayFavouriteMovies();
 
-//        setScrollBar(favouriteMoviesTableView);
-        scroll.setMax(favouriteMovieService.findAll().size());
-        scroll.setMin(0);
-        scroll.valueProperty().addListener((observableValue, number, t1) -> {
-            favouriteMoviesTableView.scrollTo(t1.intValue());
-            posterTableView.scrollTo(t1.intValue());
-        });
+        setScrollBar(favouriteMoviesTableView);
 
         favouriteMoviesTableView.getSelectionModel()
                 .selectedItemProperty()

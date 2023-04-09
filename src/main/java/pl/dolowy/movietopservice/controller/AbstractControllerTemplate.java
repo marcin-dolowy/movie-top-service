@@ -57,7 +57,7 @@ public abstract class AbstractControllerTemplate {
     public abstract void initialize();
 
     protected void setScrollBar(TableView<?> tableView) {
-        scroll.setMax(tableView.getFixedCellSize());
+        scroll.setMax(tableView.getItems().size());
         scroll.setMin(0);
         scroll.valueProperty().addListener((observableValue, number, t1) -> {
             tableView.scrollTo(t1.intValue());
