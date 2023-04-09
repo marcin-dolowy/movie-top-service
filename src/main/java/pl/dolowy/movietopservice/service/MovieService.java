@@ -21,7 +21,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 @Slf4j
 public class MovieService {
-    public static final String API_KEY = "d3d95a11";
+    private static final String API_KEY = "d3d95a11";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -30,7 +30,7 @@ public class MovieService {
         title = title.replaceAll(" ", "+");
 
         JsonNode jsonNode = objectMapper
-                .readTree(new URL("http://www.omdbapi.com/?s=" + title + "&apikey=d3d95a11"));
+                .readTree(new URL("http://www.omdbapi.com/?s=" + title + "&apikey=" + API_KEY));
 
         if (jsonNode.get("Response").textValue().equals("False")) {
             log.info("Movies not found");

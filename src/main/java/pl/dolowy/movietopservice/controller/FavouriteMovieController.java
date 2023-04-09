@@ -5,10 +5,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +19,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.model.ImagePoster;
-import pl.dolowy.movietopservice.model.Movie;
 import pl.dolowy.movietopservice.service.FavouriteMovieService;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
-@FxmlView("FavouriteMovie.fxml")
+@FxmlView("FavouriteMovieStage.fxml")
 @RequiredArgsConstructor
-public class FavouriteMovieController {
+public class FavouriteMovieController extends AbstractImageController {
 
     private Stage stage;
     boolean isWindowOpen = false;
@@ -44,34 +42,18 @@ public class FavouriteMovieController {
 
     @FXML
     private TableView<ImagePoster> posterTableView;
-    @FXML
-    private TableColumn<ImagePoster, ImageView> posterTableColumn;
 
     @FXML
     private TableView<FavouriteMovie> favouriteMoviesTableView;
+
     @FXML
-    private TableColumn<FavouriteMovie, String> imdbIDTableColumn;
-    @FXML
-    private TableColumn<FavouriteMovie, String> titleTableColumn;
-    @FXML
-    private TableColumn<FavouriteMovie, String> typeTableColumn;
-    @FXML
-    private TableColumn<FavouriteMovie, String> directorTableColumn;
-    @FXML
-    private TableColumn<FavouriteMovie, String> plotTableColumn;
-    @FXML
-    private TableColumn<FavouriteMovie, LocalDate> releasedTableColumn;
-    @FXML
-    private TableColumn<FavouriteMovie, Integer> ratingTableColumn;
-    @FXML
-    private ScrollBar scroll;
+    private TableColumn<?, Integer> ratingTableColumn;
+
     @FXML
     private Rating rating;
     @FXML
     private Button rateButton;
 
-    @FXML
-    private Label infoLabel;
     @FXML
     private Button deleteMovieButton;
 
@@ -87,12 +69,7 @@ public class FavouriteMovieController {
 
         displayFavouriteMovies();
 
-        scroll.setMax(favouriteMoviesTableView.getFixedCellSize());
-        scroll.setMin(0);
-        scroll.valueProperty().addListener((observableValue, number, t1) -> {
-            favouriteMoviesTableView.scrollTo(t1.intValue());
-            posterTableView.scrollTo(t1.intValue());
-        });
+        setScrollBar();
 
         favouriteMoviesTableView.getSelectionModel()
                 .selectedItemProperty()
@@ -129,11 +106,6 @@ public class FavouriteMovieController {
         );
     }
 
-    private void displayInfoLabel(PauseTransition pauseTransition, String message) {
-        infoLabel.setText(message);
-        pauseTransition.setOnFinished(e -> infoLabel.setText(""));
-        pauseTransition.play();
-    }
 
     public void show() {
         stage.show();
@@ -142,51 +114,18 @@ public class FavouriteMovieController {
     public void displayFavouriteMovies() {
         List<FavouriteMovie> favouriteMovies = favouriteMovieService.findAll();
         ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
-
-        imdbIDTableColumn.setCellValueFactory((new PropertyValueFactory<>("imdbID")));
-        titleTableColumn.setCellValueFactory((new PropertyValueFactory<>("title")));
-        typeTableColumn.setCellValueFactory((new PropertyValueFactory<>("type")));
-        releasedTableColumn.setCellValueFactory((new PropertyValueFactory<>("released")));
-        directorTableColumn.setCellValueFactory((new PropertyValueFactory<>("director")));
-        plotTableColumn.setCellValueFactory((new PropertyValueFactory<>("plot")));
-        ratingTableColumn.setCellValueFactory((new PropertyValueFactory<>("rating")));
-        favouriteMoviesTableView.setFixedCellSize(155);
-
-
-        plotTableColumn.setCellFactory(tc -> {
-            TableCell<FavouriteMovie, String> cell = new TableCell<>();
-            Text text = new Text();
-            cell.setGraphic(text);
-            cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
-            text.wrappingWidthProperty().bind(plotTableColumn.widthProperty());
-            text.textProperty().bind(cell.itemProperty());
-            return cell;
-        });
-
-        favouriteMoviesTableView.setItems(data);
-
-        List<ImagePoster> imagesFromMovies = getImagePosters(favouriteMovies);
-
-        ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
-
-        posterTableColumn.setCellValueFactory((new PropertyValueFactory<>("image")));
-        posterTableView.setFixedCellSize(155);
-        posterTableView.setItems(imagePosters);
         scroll.setMax(data.size());
 
-    }
+        setColumnForTableView(favouriteMoviesTableView);
+        ratingTableColumn.setCellValueFactory((new PropertyValueFactory<>("rating")));
 
-    private static List<ImagePoster> getImagePosters(List<FavouriteMovie> favouriteMovies) {
-        return favouriteMovies.stream()
-                .map(Movie::getPoster)
-                .map(s -> {
-                    ImageView imageView = new ImageView(s);
-                    imageView.setFitHeight(150);
-                    imageView.maxHeight(150);
-                    imageView.setFitWidth(180);
-                    return new ImagePoster(imageView);
-                })
-                .collect(Collectors.toList());
+        wrapEachColumnsFromTableView();
+
+        favouriteMoviesTableView.setItems(data);
+        ratingTableColumn.setCellValueFactory((new PropertyValueFactory<>("rating")));
+
+        setTableViewForImagePoster(favouriteMovies);
+
     }
 
 }
