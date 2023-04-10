@@ -55,6 +55,7 @@ public class FavouriteMovieController extends AbstractImageControllerTemplate {
                 .selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
                     FavouriteMovie currentMovie = favouriteMoviesTableView.getSelectionModel().getSelectedItem();
+                    rating.setRating(currentMovie.getRating());
 
                     rateButtonClickAction(currentMovie, favouriteMovieService);
 

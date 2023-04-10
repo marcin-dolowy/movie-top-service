@@ -7,14 +7,13 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @NoArgsConstructor
-@Entity
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @SuperBuilder
 @Data
-@ToString(callSuper = true)
+@Entity
 public class FavouriteMovie extends Movie {
 
     @Id
@@ -24,9 +23,4 @@ public class FavouriteMovie extends Movie {
     @Column(columnDefinition = "integer default 0")
     private int rating;
 
-    public FavouriteMovie(Long id, String imdbID, String title, String type, LocalDate released, String director, String plot, String poster, int rating) {
-        super(imdbID, title, type, released, director, plot, poster);
-        this.id = id;
-        this.rating = rating;
-    }
 }

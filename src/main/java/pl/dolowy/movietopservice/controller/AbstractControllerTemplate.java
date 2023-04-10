@@ -95,12 +95,6 @@ public abstract class AbstractControllerTemplate {
         wrapTextForTableColumn(plotTableColumn);
     }
 
-    public void displayInfoLabel(PauseTransition pauseTransition, String message) {
-        infoLabel.setText(message);
-        pauseTransition.setOnFinished(e -> infoLabel.setText(""));
-        pauseTransition.play();
-    }
-
     public void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
         ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
         favouriteMoviesTableView.setItems(data);
@@ -124,7 +118,7 @@ public abstract class AbstractControllerTemplate {
     public void deleteMovieButtonAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
         deleteMovieButton.setOnMouseClicked(
                 mouseEvent -> {
-                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
+                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
                     if (favouriteMovieService.delete(currentMovie.getId())) {
                         displayInfoLabel(pauseTransition, "Successfully deleted");
                         setUpdatedTableViewAfterDeleteMovie(favouriteMovieService.findAll());
@@ -135,13 +129,19 @@ public abstract class AbstractControllerTemplate {
     public void addToFavouriteButtonAction(Movie currentMovie, FavouriteMovieService favouriteMovieService) {
         addToFavouriteButton.setOnMouseClicked(
                 mouseEvent -> {
-                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(3));
+                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
                     if (favouriteMovieService.add(currentMovie)) {
                         displayInfoLabel(pauseTransition, "Successfully added");
                     } else {
                         displayInfoLabel(pauseTransition, "Movie already in favorites");
                     }
                 });
+    }
+
+    public void displayInfoLabel(PauseTransition pauseTransition, String message) {
+        infoLabel.setText(message);
+        pauseTransition.setOnFinished(e -> infoLabel.setText(""));
+        pauseTransition.play();
     }
 
 }
