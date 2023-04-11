@@ -22,6 +22,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class MovieService {
     private static final String API_KEY = "d3d95a11";
+    private static final String API_URL = "http://www.omdbapi.com/";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -30,7 +31,7 @@ public class MovieService {
         title = title.replaceAll(" ", "+");
 
         JsonNode jsonNode = objectMapper
-                .readTree(new URL("http://www.omdbapi.com/?s=" + title + "&apikey=" + API_KEY));
+                .readTree(new URL(API_URL + "?s=" + title + "&apikey=" + API_KEY));
 
         if (jsonNode.get("Response").textValue().equals("False")) {
             log.info("Movies not found");
@@ -48,7 +49,7 @@ public class MovieService {
                 .map(idMovie -> {
                     try {
                         JsonNode movie = objectMapper
-                                .readTree(new URL("http://www.omdbapi.com/?i=" + idMovie + "&apikey=" + API_KEY));
+                                .readTree(new URL(API_URL + "?i=" + idMovie + "&apikey=" + API_KEY));
                         return fromJsonToMovie(movie);
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -43,8 +43,8 @@ public class FavouriteMovieService {
 
     public boolean delete(Long id) {
         if (findFavouriteMovieById(id).isPresent()) {
-            favouriteMovieRepository.deleteById(id);
             log.info("{} successfully deleted", findFavouriteMovieById(id));
+            favouriteMovieRepository.deleteById(id);
             return true;
         }
         return false;
