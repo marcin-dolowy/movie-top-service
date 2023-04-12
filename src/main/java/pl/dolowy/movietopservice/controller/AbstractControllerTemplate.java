@@ -95,14 +95,6 @@ public abstract class AbstractControllerTemplate {
         wrapTextForTableColumn(plotTableColumn);
     }
 
-    public void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
-        ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
-        favouriteMoviesTableView.setItems(data);
-        List<ImagePoster> imagesFromMovies = AbstractImageControllerTemplate.getImagePosters(favouriteMovies);
-        ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
-        posterTableView.setItems(imagePosters);
-    }
-
     public void rateButtonClickAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
         rateButton.setOnMouseClicked(
                 mouseEvent -> {
@@ -124,6 +116,14 @@ public abstract class AbstractControllerTemplate {
                         setUpdatedTableViewAfterDeleteMovie(favouriteMovieService.findAll());
                     }
                 });
+    }
+
+    public void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
+        ObservableList<FavouriteMovie> data = FXCollections.observableList(favouriteMovies);
+        favouriteMoviesTableView.setItems(data);
+        List<ImagePoster> imagesFromMovies = AbstractImageControllerTemplate.getImagePosters(favouriteMovies);
+        ObservableList<ImagePoster> imagePosters = FXCollections.observableList(imagesFromMovies);
+        posterTableView.setItems(imagePosters);
     }
 
     public void addToFavouriteButtonAction(Movie currentMovie, FavouriteMovieService favouriteMovieService) {
