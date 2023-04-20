@@ -54,6 +54,10 @@ public abstract class AbstractControllerTemplate {
     protected Button deleteMovieButton;
     @FXML
     protected Button addToFavouriteButton;
+    @FXML
+    protected ProgressBar progressBar;
+    @FXML
+    public Button searchButton;
 
     @FXML
     public abstract void initialize();
