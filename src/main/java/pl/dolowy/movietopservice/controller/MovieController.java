@@ -2,6 +2,7 @@ package pl.dolowy.movietopservice.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -54,22 +55,41 @@ public class MovieController extends AbstractImageControllerTemplate {
 
     @FXML
     public void findMovies() {
-        List<Movie> movies = movieService.getMoviesFromApi(movieSearchTextField.getText());
-        if (movies.isEmpty()) {
-            pickedMovie.setText("MOVIE NOT FOUND");
-        } else {
-            pickedMovie.setText("");
+        progress = 0;
+        Task<List<Movie>> task = new Task<>() {
+            @Override
+            protected List<Movie> call() {
+                return movieService.getMoviesFromApi(movieSearchTextField.getText());
+            }
+        };
 
-            ObservableList<Movie> data = FXCollections.observableList(movies);
+        task.setOnSucceeded(t -> {
+            List<Movie> movies = task.getValue();
 
-            setColumnForTableView(moviesTableView);
-            wrapEachColumnsFromTableView();
+            if (movies.isEmpty()) {
+                pickedMovie.setText("MOVIE NOT FOUND");
+            } else {
+                pickedMovie.setText("");
 
-            moviesTableView.setItems(data);
+                ObservableList<Movie> data = FXCollections.observableList(movies);
 
-            setTableViewForImagePoster(movies);
-            scroll.setMax(data.size());
-        }
+                setColumnForTableView(moviesTableView);
+                wrapEachColumnsFromTableView();
+
+                moviesTableView.setItems(data);
+
+                setTableViewForImagePoster(movies);
+                scroll.setMax(data.size());
+            }
+
+            progressBar.setVisible(false);
+            progress = 1.0;
+        });
+
+        setThreadForProgressBar();
+
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
 }

@@ -1,6 +1,7 @@
 package pl.dolowy.movietopservice.controller;
 
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,7 +58,9 @@ public abstract class AbstractControllerTemplate {
     @FXML
     protected ProgressBar progressBar;
     @FXML
-    public Button searchButton;
+    protected Button searchButton;
+
+    protected double progress = 0;
 
     @FXML
     public abstract void initialize();
@@ -146,6 +149,24 @@ public abstract class AbstractControllerTemplate {
         infoLabel.setText(message);
         pauseTransition.setOnFinished(e -> infoLabel.setText(""));
         pauseTransition.play();
+    }
+
+    protected void setThreadForProgressBar() {
+        Thread progressThread = new Thread(() -> {
+            while (progress < 1.0) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    break;
+                }
+                progress += 0.1;
+                Platform.runLater(() -> progressBar.setProgress(progress));
+            }
+        });
+        progressThread.setDaemon(true);
+
+        progressBar.setVisible(true);
+        progressThread.start();
     }
 
 }
