@@ -15,18 +15,15 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void init() {
-        ApplicationContextInitializer<GenericApplicationContext> initializer =
-                context -> {
-                    context.registerBean(Application.class, () -> JavaFxApplication.this);
-                    context.registerBean(Parameters.class, this::getParameters);
-                };
+        ApplicationContextInitializer<GenericApplicationContext> initializer = context -> {
+            context.registerBean(Application.class, () -> JavaFxApplication.this);
+            context.registerBean(Parameters.class, this::getParameters);
+        };
 
         this.applicationContext = new SpringApplicationBuilder()
                 .sources(MovieTopServiceApplication.class)
                 .initializers(initializer)
-                .run(getParameters()
-                        .getRaw()
-                        .toArray(new String[0]));
+                .run(getParameters().getRaw().toArray(new String[0]));
     }
 
     @Override
@@ -39,5 +36,4 @@ public class JavaFxApplication extends Application {
         this.applicationContext.close();
         Platform.exit();
     }
-
 }

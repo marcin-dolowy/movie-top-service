@@ -1,5 +1,6 @@
 package pl.dolowy.movietopservice.controller;
 
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -16,8 +17,6 @@ import pl.dolowy.movietopservice.model.Movie;
 import pl.dolowy.movietopservice.service.FavouriteMovieService;
 import pl.dolowy.movietopservice.service.MovieService;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 @FxmlView("MovieStage.fxml")
@@ -29,11 +28,12 @@ public class MovieController extends AbstractImageControllerTemplate {
 
     @FXML
     private Label pickedMovie;
+
     @FXML
     private TextField movieSearchTextField;
+
     @FXML
     private Button openFavouriteMoviesButton;
-
 
     @Override
     public void initialize() {
@@ -42,15 +42,16 @@ public class MovieController extends AbstractImageControllerTemplate {
 
         setScrollBar(moviesTableView);
 
-        moviesTableView.getSelectionModel()
+        moviesTableView
+                .getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
                     Movie currentMovie = moviesTableView.getSelectionModel().getSelectedItem();
-                    pickedMovie.setText("Your movie: " + currentMovie.getTitle() + " from " + currentMovie.getReleased());
+                    pickedMovie.setText(
+                            "Your movie: " + currentMovie.getTitle() + " from " + currentMovie.getReleased());
 
                     addToFavouriteButtonAction(currentMovie, favouriteMovieService);
                 });
-
     }
 
     @FXML
@@ -91,5 +92,4 @@ public class MovieController extends AbstractImageControllerTemplate {
         Thread thread = new Thread(task);
         thread.start();
     }
-
 }

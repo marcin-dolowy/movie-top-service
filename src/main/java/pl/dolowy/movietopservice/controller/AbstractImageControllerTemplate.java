@@ -1,5 +1,7 @@
 package pl.dolowy.movietopservice.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -7,10 +9,6 @@ import javafx.scene.image.ImageView;
 import org.springframework.stereotype.Component;
 import pl.dolowy.movietopservice.model.ImagePoster;
 import pl.dolowy.movietopservice.model.Movie;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Component
 public abstract class AbstractImageControllerTemplate extends AbstractControllerTemplate {
@@ -36,5 +34,4 @@ public abstract class AbstractImageControllerTemplate extends AbstractController
         posterTableView.setFixedCellSize(155);
         posterTableView.setItems(imagePosters);
     }
-
 }

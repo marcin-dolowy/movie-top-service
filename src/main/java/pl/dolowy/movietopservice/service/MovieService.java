@@ -2,12 +2,6 @@ package pl.dolowy.movietopservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import pl.dolowy.movietopservice.model.Movie;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -16,6 +10,11 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import pl.dolowy.movietopservice.model.Movie;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +29,7 @@ public class MovieService {
     public List<Movie> getMoviesFromApi(String title) {
         title = title.replaceAll(" ", "+");
 
-        JsonNode jsonNode = objectMapper
-                .readTree(new URL(API_URL + "?s=" + title + "&apikey=" + API_KEY));
+        JsonNode jsonNode = objectMapper.readTree(new URL(API_URL + "?s=" + title + "&apikey=" + API_KEY));
 
         if (jsonNode.get("Response").textValue().equals("False")) {
             log.info("Movies not found");
@@ -48,8 +46,8 @@ public class MovieService {
                 .map(JsonNode::textValue)
                 .map(idMovie -> {
                     try {
-                        JsonNode movie = objectMapper
-                                .readTree(new URL(API_URL + "?i=" + idMovie + "&apikey=" + API_KEY));
+                        JsonNode movie =
+                                objectMapper.readTree(new URL(API_URL + "?i=" + idMovie + "&apikey=" + API_KEY));
                         return fromJsonToMovie(movie);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -61,8 +59,7 @@ public class MovieService {
     }
 
     private static List<JsonNode> getImdbIDFromMoviesList(JsonNode listOfMovies) {
-        return StreamSupport
-                .stream(listOfMovies.spliterator(), false)
+        return StreamSupport.stream(listOfMovies.spliterator(), false)
                 .map(jsonNode1 -> jsonNode1.get("imdbID"))
                 .collect(Collectors.toList());
     }
@@ -71,8 +68,7 @@ public class MovieService {
 
         Optional<LocalDate> date = parseValidReleaseDate(movie);
 
-        return Movie
-                .builder()
+        return Movie.builder()
                 .imdbID(movie.get("imdbID").textValue())
                 .title(movie.get("Title").textValue())
                 .type(movie.get("Type").textValue())
@@ -96,5 +92,4 @@ public class MovieService {
                 .appendPattern("dd MMM yyyy")
                 .toFormatter(Locale.ENGLISH);
     }
-
 }

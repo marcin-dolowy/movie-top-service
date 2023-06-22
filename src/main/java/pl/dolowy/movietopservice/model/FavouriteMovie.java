@@ -1,12 +1,11 @@
 package pl.dolowy.movietopservice.model;
 
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -22,5 +21,4 @@ public class FavouriteMovie extends Movie {
 
     @Column(columnDefinition = "integer default 0")
     private int rating;
-
 }

@@ -1,13 +1,12 @@
 package pl.dolowy.movietopservice.model;
 
+import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import java.time.LocalDate;
 
 @Data
 @SuperBuilder

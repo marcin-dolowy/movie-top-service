@@ -1,5 +1,7 @@
 package pl.dolowy.movietopservice.controller;
 
+import java.time.LocalDate;
+import java.util.List;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -17,46 +19,60 @@ import pl.dolowy.movietopservice.model.ImagePoster;
 import pl.dolowy.movietopservice.model.Movie;
 import pl.dolowy.movietopservice.service.FavouriteMovieService;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Component
 public abstract class AbstractControllerTemplate {
 
     @FXML
     protected TableView<Movie> moviesTableView = new TableView<>();
+
     @FXML
     protected TableView<FavouriteMovie> favouriteMoviesTableView = new TableView<>();
+
     @FXML
     protected TableView<ImagePoster> posterTableView = new TableView<>();
+
     @FXML
     protected TableColumn<ImagePoster, ImageView> posterTableColumn;
+
     @FXML
     protected TableColumn<?, String> imdbIDTableColumn;
+
     @FXML
     protected TableColumn<?, String> titleTableColumn;
+
     @FXML
     protected TableColumn<?, String> typeTableColumn;
+
     @FXML
     protected TableColumn<?, LocalDate> releasedTableColumn;
+
     @FXML
     protected TableColumn<?, String> directorTableColumn;
+
     @FXML
     protected TableColumn<?, String> plotTableColumn;
+
     @FXML
     protected ScrollBar scroll;
+
     @FXML
     protected Label infoLabel;
+
     @FXML
     protected Rating rating;
+
     @FXML
     protected Button rateButton;
+
     @FXML
     protected Button deleteMovieButton;
+
     @FXML
     protected Button addToFavouriteButton;
+
     @FXML
     protected ProgressBar progressBar;
+
     @FXML
     protected Button searchButton;
 
@@ -103,26 +119,23 @@ public abstract class AbstractControllerTemplate {
     }
 
     public void rateButtonClickAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
-        rateButton.setOnMouseClicked(
-                mouseEvent -> {
-                    if (currentMovie != null) {
-                        currentMovie.setRating((int) rating.getRating());
-                        favouriteMovieService.updateFavouriteMovie(currentMovie.getId(), currentMovie);
-                        favouriteMoviesTableView.refresh();
-                    }
-                }
-        );
+        rateButton.setOnMouseClicked(mouseEvent -> {
+            if (currentMovie != null) {
+                currentMovie.setRating((int) rating.getRating());
+                favouriteMovieService.updateFavouriteMovie(currentMovie.getId(), currentMovie);
+                favouriteMoviesTableView.refresh();
+            }
+        });
     }
 
     public void deleteMovieButtonAction(FavouriteMovie currentMovie, FavouriteMovieService favouriteMovieService) {
-        deleteMovieButton.setOnMouseClicked(
-                mouseEvent -> {
-                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
-                    if (favouriteMovieService.delete(currentMovie.getId())) {
-                        displayInfoLabel(pauseTransition, "Successfully deleted");
-                        setUpdatedTableViewAfterDeleteMovie(favouriteMovieService.findAll());
-                    }
-                });
+        deleteMovieButton.setOnMouseClicked(mouseEvent -> {
+            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
+            if (favouriteMovieService.delete(currentMovie.getId())) {
+                displayInfoLabel(pauseTransition, "Successfully deleted");
+                setUpdatedTableViewAfterDeleteMovie(favouriteMovieService.findAll());
+            }
+        });
     }
 
     public void setUpdatedTableViewAfterDeleteMovie(List<FavouriteMovie> favouriteMovies) {
@@ -134,15 +147,14 @@ public abstract class AbstractControllerTemplate {
     }
 
     public void addToFavouriteButtonAction(Movie currentMovie, FavouriteMovieService favouriteMovieService) {
-        addToFavouriteButton.setOnMouseClicked(
-                mouseEvent -> {
-                    PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
-                    if (favouriteMovieService.add(currentMovie)) {
-                        displayInfoLabel(pauseTransition, "Successfully added");
-                    } else {
-                        displayInfoLabel(pauseTransition, "Movie already in favorites");
-                    }
-                });
+        addToFavouriteButton.setOnMouseClicked(mouseEvent -> {
+            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
+            if (favouriteMovieService.add(currentMovie)) {
+                displayInfoLabel(pauseTransition, "Successfully added");
+            } else {
+                displayInfoLabel(pauseTransition, "Movie already in favorites");
+            }
+        });
     }
 
     public void displayInfoLabel(PauseTransition pauseTransition, String message) {
@@ -168,5 +180,4 @@ public abstract class AbstractControllerTemplate {
         progressBar.setVisible(true);
         progressThread.start();
     }
-
 }

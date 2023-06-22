@@ -1,5 +1,8 @@
 package pl.dolowy.movietopservice.service;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,10 +10,6 @@ import org.springframework.util.ReflectionUtils;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.model.Movie;
 import pl.dolowy.movietopservice.repository.FavouriteMovieRepository;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +23,7 @@ public class FavouriteMovieService {
     }
 
     public void updateFavouriteMovie(Long id, FavouriteMovie favouriteMovie) {
-        FavouriteMovie movie = favouriteMovieRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+        FavouriteMovie movie = favouriteMovieRepository.findById(id).orElseThrow(NoSuchElementException::new);
 
         ReflectionUtils.doWithFields(FavouriteMovie.class, field -> {
             field.setAccessible(true);
@@ -53,8 +51,7 @@ public class FavouriteMovieService {
     public boolean add(Movie movie) {
         FavouriteMovie favouriteMovie = getFavouriteMovie(movie);
 
-        if (favouriteMovieRepository.findAll()
-                .stream()
+        if (favouriteMovieRepository.findAll().stream()
                 .map(FavouriteMovie::getImdbID)
                 .noneMatch(e -> e.equals(favouriteMovie.getImdbID()))) {
             favouriteMovieRepository.save(favouriteMovie);
@@ -66,8 +63,7 @@ public class FavouriteMovieService {
     }
 
     private static FavouriteMovie getFavouriteMovie(Movie movie) {
-        return FavouriteMovie
-                .builder()
+        return FavouriteMovie.builder()
                 .imdbID(movie.getImdbID())
                 .title(movie.getTitle())
                 .type(movie.getType())
@@ -77,5 +73,4 @@ public class FavouriteMovieService {
                 .poster(movie.getPoster())
                 .build();
     }
-
 }

@@ -1,5 +1,6 @@
 package pl.dolowy.movietopservice.controller;
 
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Controller;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
 import pl.dolowy.movietopservice.service.FavouriteMovieService;
 
-import java.util.List;
-
 @Controller
 @FxmlView("FavouriteMovieStage.fxml")
 @RequiredArgsConstructor
@@ -32,8 +31,10 @@ public class FavouriteMovieController extends AbstractImageControllerTemplate {
 
     @FXML
     private Button closeButton;
+
     @FXML
     private SplitPane favouriteMovieSplitPane;
+
     @FXML
     private TableColumn<FavouriteMovie, Integer> ratingTableColumn;
 
@@ -51,11 +52,13 @@ public class FavouriteMovieController extends AbstractImageControllerTemplate {
 
         setScrollBar(favouriteMoviesTableView);
 
-        favouriteMoviesTableView.getSelectionModel()
+        favouriteMoviesTableView
+                .getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
-                    FavouriteMovie currentMovie = favouriteMoviesTableView.getSelectionModel().getSelectedItem();
-                    if(currentMovie != null) {
+                    FavouriteMovie currentMovie =
+                            favouriteMoviesTableView.getSelectionModel().getSelectedItem();
+                    if (currentMovie != null) {
                         rating.setRating(currentMovie.getRating());
                     }
 
@@ -64,9 +67,7 @@ public class FavouriteMovieController extends AbstractImageControllerTemplate {
                     deleteMovieButtonAction(currentMovie, favouriteMovieService);
                 });
 
-        closeButton.setOnAction(
-                actionEvent -> stage.hide()
-        );
+        closeButton.setOnAction(actionEvent -> stage.hide());
     }
 
     public void show() {
@@ -86,7 +87,5 @@ public class FavouriteMovieController extends AbstractImageControllerTemplate {
 
         setTableViewForImagePoster(favouriteMovies);
         scroll.setMax(data.size());
-
     }
-
 }

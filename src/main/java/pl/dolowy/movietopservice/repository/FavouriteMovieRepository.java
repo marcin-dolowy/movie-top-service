@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 import pl.dolowy.movietopservice.model.FavouriteMovie;
 
 @Repository
-public interface FavouriteMovieRepository extends JpaRepository<FavouriteMovie, Long> {
-}
+public interface FavouriteMovieRepository extends JpaRepository<FavouriteMovie, Long> {}
